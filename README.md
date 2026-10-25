@@ -14,11 +14,18 @@
 > * Default accessories mode set to rumble (`CONFIG_BLUERETRO_DEFAULT_ACC_RUMBLE`).
 > * Build configs: `configs/hw1/n64_retroscaler`, `configs/hw1/dreamcast_retroscaler` & `configs/hw1/gamecube_retroscaler`.
 >
-> To build, e.g. for N64: `cp configs/hw1/n64_retroscaler sdkconfig && idf.py reconfigure build`
+> **Tested successfully** on the RetroScaler 4 ports N64, Dreamcast & GameCube adapters.
+>
+> **Download:** prebuilt firmware is available on the [Releases](https://github.com/opssemnik/Blueretro-for-retroscaler-4port/releases) page.
+> * `*_full.bin` is a full flash image, the same layout as the RetroScaler images: flash it at **0x0** (e.g. NodeMCU flasher default settings).
+> * `*_app.bin` is the app only: flash it at **0x10000**. Flashing it at 0x0 overwrites the bootloader and the adapter won't boot.
+> * Flashing a full image erases saved settings & BT pairings.
+>
+> **Build**, e.g. for N64: `cp configs/hw1/n64_retroscaler sdkconfig && idf.py reconfigure build` (ESP-IDF v5.4).
+> This produces both `build/BlueRetro.bin` (app, 0x10000) and `build/BlueRetro_full.bin` (full image, 0x0).
 >
 > Both options are off by default, so the stock configs build the same firmware as upstream.
-> These builds have not been tested on hardware by the fork maintainer. Use at your own risk.
-> Please do not report issues with this fork to the upstream project.
+> Use at your own risk. Please do not report issues with this fork to the upstream project.
 
 **This repository has been archived and is no longer under active development or maintenance.**
 

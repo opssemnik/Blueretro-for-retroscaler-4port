@@ -1,0 +1,66 @@
+name: retroscaler
+on:
+  push:
+    branches: [ master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        br_config: [n64, dreamcast, gamecube]
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:v5.4
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+    - name: Build with ESP-IDF
+      shell: bash
+      run: |
+        git config --global --add safe.directory '*'
+        . $IDF_PATH/export.sh
+        rm -fr build
+        cp configs/hw1/${{ matrix.br_config }}_retroscaler sdkconfig
+        idf.py reconfigure build
+        mkdir dist
+        cp build/BlueRetro_full.bin dist/BlueRetro_hw1_${{ matrix.br_config }}_retroscaler_full.bin
+        cp build/BlueRetro.bin dist/BlueRetro_hw1_${{ matrix.br_config }}_retroscaler_app.bin
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: hw1_${{ matrix.br_config }}_retroscaler
+        path: dist/*
+        if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: dist
+        merge-multiple: true
+    - name: Create release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/*
+        body: |
+          RetroScaler 4 ports adapter firmware (N64, Dreamcast & GameCube).
+
+          * `*_full.bin`: full flash image, flash at **0x0** (e.g. NodeMCU flasher default settings). Same layout as the RetroScaler images.
+          * `*_app.bin`: app only, flash at **0x10000**.
+
+          Flashing a full image erases saved settings & BT pairings.
