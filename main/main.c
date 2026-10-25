@@ -150,6 +150,7 @@ static void wl_init_task(void *arg) {
 
 void app_main()
 {
+    bt_leds_init();
     adapter_init();
 
     start_app_cpu(wired_init_task);
