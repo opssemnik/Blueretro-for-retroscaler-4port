@@ -1,3 +1,25 @@
+> [!WARNING]
+> **Unofficial fork: RetroScaler 4 ports adapter support**
+>
+> This fork adds support for the RetroScaler 4 ports BlueRetro adapters (N64, Dreamcast & GameCube versions with 4 BT LEDs).
+> It is not affiliated with, endorsed by or supported by the original BlueRetro author or by RetroScaler.
+>
+> RetroScaler ships these adapters with modified BlueRetro firmware but without its source code.
+> The changes in this fork were reconstructed by reverse engineering their firmware binaries.
+> Built with ESP-IDF v5.4 on top of upstream commit `ddfc31b`, these changes reproduce the RetroScaler app images byte-for-byte (except build time, version string & hashes).
+> In this fork they are applied on top of the final upstream release.
+>
+> Changes compared to upstream BlueRetro:
+> * 4 BT status LEDs on GPIO 14, 32, 33 & 25: a LED turns on once the matching BT device is identified and off when it disconnects (`CONFIG_BLUERETRO_RETROSCALER_4LED`).
+> * Default accessories mode set to rumble (`CONFIG_BLUERETRO_DEFAULT_ACC_RUMBLE`).
+> * Build configs: `configs/hw1/n64_retroscaler`, `configs/hw1/dreamcast_retroscaler` & `configs/hw1/gamecube_retroscaler`.
+>
+> To build, e.g. for N64: `cp configs/hw1/n64_retroscaler sdkconfig && idf.py reconfigure build`
+>
+> Both options are off by default, so the stock configs build the same firmware as upstream.
+> These builds have not been tested on hardware by the fork maintainer. Use at your own risk.
+> Please do not report issues with this fork to the upstream project.
+
 **This repository has been archived and is no longer under active development or maintenance.**
 
 ```
